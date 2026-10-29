@@ -1,277 +1,180 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>测测你是F1围场里哪位车手</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        f1: {
-                            bg: '#121212',
-                            card: '#1E1E1E',
-                            text: '#EAEAEA',
-                            subtext: '#B4B4B4',
-                            accent: '#E60000',
-                            hover: '#333333',
-                            border: '#3A3A3A'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['system-ui', 'PingFang SC', 'Microsoft YaHei', 'sans-serif']
-                    }
-                }
-            }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>F1车手性格测试</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            f1red: '#E10600',
+            f1dark: '#15151E',
+            f1gray: '#2A2A38',
+            f1light: '#E8E8EE'
+          }
         }
-    </script>
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .page-hidden { display: none; }
-            .option-btn {
-                @apply w-full text-left p-4 rounded-xl border border-f1-border my-2 transition-colors text-f1-text;
-            }
-            .option-btn:hover {
-                @apply bg-f1-hover;
-            }
-            .option-btn.selected {
-                @apply bg-f1-accent text-white border-f1-accent;
-            }
-            .btn-back {
-                @apply p-4 rounded-xl bg-f1-card border border-f1-border text-f1-subtext font-medium w-full mt-6;
-            }
-        }
-    </style>
-</head>
-<body class="bg-f1-bg min-h-screen">
-    <div class="max-w-md mx-auto px-5 py-10">
-        <div id="page-cover" class="block">
-            <div class="bg-f1-card rounded-2xl p-8 shadow-lg">
-                <div class="text-center">
-                    <p class="text-f1-subtext text-sm mb-2">趣味心理测试｜F1车迷专属</p>
-                    <h1 class="text-[28px] font-bold text-f1-text leading-tight mb-4">🏁 测测你是F1围场里哪位车手</h1>
-                    <p class="text-f1-subtext text-base mb-8">
-                        围场里每个人都拥有截然不同的性格。<br>
-                        一共15道选择题，点击选项自动跳转下一题✨
-                    </p>
-                    <button onclick="startQuiz()" class="option-btn selected">开始测试</button>
-                </div>
-            </div>
-        </div>
-        <div id="page-quiz" class="page-hidden">
-            <div class="bg-f1-card rounded-2xl p-8 shadow-lg">
-                <div class="w-full h-2 bg-f1-border rounded-full mb-4 overflow-hidden">
-                    <div id="progress-bar" class="h-full bg-f1-accent transition-all duration-300"></div>
-                </div>
-                <div class="mb-4">
-                    <span class="text-sm text-f1-subtext">题目 <span id="current-num">1</span>/15</span>
-                </div>
-                <h2 id="question-text" class="text-lg font-semibold text-f1-text mb-6"></h2>
-                <div id="options-box"></div>
-                <button id="prev-button" onclick="prevQuestion()" class="btn-back">上一题</button>
-            </div>
-        </div>
-        <div id="page-result" class="page-hidden">
-            <div class="bg-f1-card rounded-2xl p-8 shadow-lg text-center">
-                <p class="text-f1-subtext text-sm mb-2">你的匹配车手</p>
-                <h2 id="driver-name" class="text-[26px] font-bold text-f1-text my-3"></h2>
-                <p id="driver-tag" class="text-f1-accent font-medium mb-4"></p>
-                <div id="driver-desc" class="text-left text-f1-subtext text-base leading-relaxed mb-8"></div>
-                <button onclick="copyResult()" class="option-btn selected mb-4">📋复制结果文案</button>
-                <button onclick="restartQuiz()" class="btn-back">重新测试</button>
-            </div>
-        </div>
-    </div>
-<script>
-const questions = [
-    {
-        q: "Q1 比赛最后一圈，出现超车机会，你会？",
-        opts: [
-            {text:"A.抓住缝隙全力晚刹，果断进攻，绝不犹豫", score:["max","gasly","tsunoda","kevin","alpine"]},
-            {text:"B.多观察几圈，等待稳妥窗口，不贸然冒险", score:["carlos","zhou","piastri","stroll","sargeant"]},
-            {text:"C.优先守住位置，保护轮胎，保住现有积分", score:["george","perez","bottas","ocon"]},
-            {text:"D.享受竞技，尽力尝试，就算失败也不留遗憾", score:["lando","charles","albon"]},
-            {text:"E.凭借经验冷静判断，一击制胜", score:["alonso","hamilton","hulkenberg"]}
-        ]
-    },
-    {
-        q: "Q2 面对巨大外界期待与舆论压力，你会？",
-        opts: [
-            {text:"A.屏蔽杂音，目标优先，胜负最重要", score:["max","hulkenberg","kevin"]},
-            {text:"B.压力激发自己，情绪真诚外露，全力拼搏", score:["charles","tsunoda","gasly"]},
-            {text:"C.心态松弛，苦中作乐，高压下也能保持轻松", score:["lando","albon"]},
-            {text:"D.低调沉稳，默默打磨实力，少说多做", score:["zhou","piastri","bottas","sargeant"]},
-            {text:"E.阅历深厚，看淡褒贬，坚持自己节奏", score:["alonso","hamilton","perez","ocon","stroll"]}
-        ]
-    },
-    {
-        q: "Q3 你如何看待队内车手竞争？",
-        opts: [
-            {text:"A.赛道只论快慢，全力比拼，场下保持正常相处", score:["max","gasly","tsunoda","kevin","alpine"]},
-            {text:"B.公平对抗，互相尊重，理性竞技", score:["charles","carlos","ocon","piastri","albon"]},
-            {text:"C.团队优先，必要时牺牲个人成绩顾全大局", score:["george","perez","bottas","stroll"]},
-            {text:"D.良性竞争，互相促进，轻松看待比拼", score:["lando"]},
-            {text:"E.赛场全力对抗，赛后维持体面尊重", score:["alonso","hamilton","hulkenberg","sargeant"]}
-        ]
-    },
-    {
-        q: "Q4 撞车或者比赛失利，你的第一反应是？",
-        opts: [
-            {text:"A.立刻复盘数据，找到问题，准备下一场夺回胜利", score:["max","george","piastri","ocon"]},
-            {text:"B.情绪涌上心头，感到遗憾难过，需要一段时间平复", score:["charles","tsunoda"]},
-            {text:"C.短暂失落，快速调整状态，准备再战", score:["lando","gasly","kevin","alpine","albon"]},
-            {text:"D.接受结果，尽力即可，稳步向前", score:["zhou","bottas","sargeant","stroll"]},
-            {text:"E.见惯输赢，快速总结，继续向前", score:["alonso","hamilton","perez","hulkenberg"]}
-        ]
-    },
-    {
-        q: "Q5 下面哪句话最贴合你的想法？",
-        opts: [
-            {text:"A.胜利不是选择，是必须达成的目标", score:["max","gasly","tsunoda","kevin","alpine"]},
-            {text:"B.热爱高于一切，愿意为热爱全力以赴", score:["charles","alonso","albon"]},
-            {text:"C.审时度势，耐心等待，厚积薄发", score:["carlos","zhou","piastri","bottas","stroll"]},
-            {text:"D.享受赛场，保持松弛，快乐竞技", score:["lando"]},
-            {text:"E.团队为先，持续成长，稳步突破自我", score:["george","hamilton","perez","ocon","sargeant","hulkenberg"]}
-        ]
-    },
-    {
-        q: "Q6 排位成绩不理想，正赛你打算？",
-        opts: [
-            {text:"A.全力进攻，主动创造机会，不断超车抢位置", score:["max","gasly","tsunoda","albon","alpine"]},
-            {text:"B.憋着一股斗志，拼完整场比赛", score:["charles","kevin","hulkenberg"]},
-            {text:"C.研究策略，抓住对手失误慢慢向前追赶", score:["carlos","george","piastri","bottas"]},
-            {text:"D.稳扎稳打，不冒风险，守住可以拿到的分数", score:["zhou","perez","sargeant","stroll"]},
-            {text:"E.依靠多年经验，寻找翻盘机会", score:["alonso","hamilton","ocon"]}
-        ]
-    },
-    {
-        q: "Q7 车队下达让车指令，你会怎么想？",
-        opts: [
-            {text:"A.如果我的速度更快，不会轻易让出位置", score:["max","gasly","tsunoda","kevin","alpine"]},
-            {text:"B.内心不甘，但会尊重车队整体决定", score:["charles","carlos","albon"]},
-            {text:"C.理解大局，服从车队战术安排", score:["george","perez","bottas","stroll","ocon"]},
-            {text:"D.可以配合，赛后轻松和队友沟通这件事", score:["lando"]},
-            {text:"E.理性沟通，专业执行车队战术", score:["alonso","hamilton","piastri","hulkenberg","sargeant"]}
-        ]
-    },
-    {
-        q: "Q8 雨天湿滑赛道，你的驾驶风格偏向？",
-        opts: [
-            {text:"A.敢于逼近极限，大胆进攻，享受雨战", score:["max","charles","gasly","tsunoda","albon","alpine"]},
-            {text:"B.稳健控车，避免打滑，优先保住积分", score:["carlos","george","zhou","perez","bottas","stroll"]},
-            {text:"C.经验老道，擅长在湿滑赛道寻找机会", score:["alonso","hamilton","ocon","hulkenberg"]},
-            {text:"D.小心控制节奏，慢慢找到抓地力", score:["piastri","sargeant"]},
-            {text:"E.敢硬碰硬，不惧雨里缠斗对抗", score:["kevin"]}
-        ]
-    },
-    {
-        q: "Q9 休赛期，你的安排偏向？",
-        opts: [
-            {text:"A.高强度体能训练，全力备战新赛季", score:["max","gasly","tsunoda","albon","alpine"]},
-            {text:"B.维持热爱，兼顾爱好，平衡生活和赛车", score:["charles","lando","kevin"]},
-            {text:"C.适当休息，研究赛道与车辆数据", score:["carlos","george","piastri","bottas"]},
-            {text:"D.沉静沉淀，持续打磨自身技术", score:["zhou","sargeant","stroll"]},
-            {text:"E.保持竞技状态，终身保有赛车热情", score:["alonso","hamilton","perez","ocon","hulkenberg"]}
-        ]
-    },
-    {
-        q: "Q10 赛后记者提出尖锐质疑，你会？",
-        opts: [
-            {text:"A.直接说出想法，干脆利落不委婉", score:["max","hulkenberg","kevin"]},
-            {text:"B.真诚表达内心真实感受", score:["charles","gasly","tsunoda"]},
-            {text:"C.幽默化解，轻松跳过尖锐问题", score:["lando"]},
-            {text:"D.冷静克制，客观理性回答提问", score:["carlos","piastri","ocon","bottas"]},
-            {text:"E.得体稳重，措辞谨慎，顾全大局", score:["george","hamilton","alonso","perez","zhou","sargeant","stroll","albon","alpine"]}
-        ]
-    },
-    {
-        q: "Q11 赛车调校糟糕，车辆很难开，你会？",
-        opts: [
-            {text:"A.主动和工程师沟通，坚持自己的驾驶感受", score:["max","charles","gasly","tsunoda","alpine"]},
-            {text:"B.配合团队逐项测试，理性优化车辆", score:["carlos","george","piastri","ocon","bottas"]},
-            {text:"C.慢慢适应车辆，一点点找到操控平衡点", score:["zhou","lando","sargeant","stroll"]},
-            {text:"D.快速判断车辆问题，给出专业判断", score:["alonso","hamilton","hulkenberg"]},
-            {text:"E.尽力挖掘赛车极限，不轻易放弃", score:["albon","kevin","perez"]}
-        ]
-    },
-    {
-        q: "Q12 收官战距离总冠军只差关键积分，你会？",
-        opts: [
-            {text:"A.全力争胜，不惜一切冲击冠军", score:["max","gasly","tsunoda","kevin","alpine"]},
-            {text:"B.带着执念全力奋战，不留遗憾", score:["charles","albon"]},
-            {text:"C.稳中求进，优先守住需要的积分", score:["carlos","george","perez","bottas","stroll","ocon"]},
-            {text:"D.尽力拼搏，无论结果都坦然接受", score:["lando","zhou","sargeant"]},
-            {text:"E.依靠经验和策略，战斗到最后一刻", score:["alonso","hamilton","piastri","hulkenberg"]}
-        ]
-    },
-    {
-        q: "Q13 在围场里社交，你属于？",
-        opts: [
-            {text:"A.不爱应酬，专注比赛，社交越少越好", score:["max","zhou","piastri","bottas","sargeant"]},
-            {text:"B.待人真诚，容易建立深厚的情谊", score:["charles","albon"]},
-            {text:"C.外向活跃，人缘好，擅长活跃气氛", score:["lando","gasly","tsunoda","kevin","alpine"]},
-            {text:"D.待人温和克制，保持合适边界感", score:["carlos","ocon","stroll"]},
-            {text:"E.阅历丰富，尊重所有人，从容处事", score:["alonso","hamilton","george","perez","hulkenberg"]}
-        ]
-    },
-    {
-        q: "Q14 休赛假期，你更倾向怎么安排自己的时间？",
-        opts: [
-            {text:"A.独自训练打磨体能，专注目标，减少社交消耗", score:["max","gasly","tsunoda","kevin","alpine"]},
-            {text:"B.陪伴亲友，旅行体验新鲜事物，跟着内心热爱走", score:["charles","alonso","albon"]},
-            {text:"C.安静独处，研究资料规划未来，喜欢深度思考", score:["carlos","zhou","piastri","bottas","stroll"]},
-            {text:"D.和好友聚会玩乐，享受轻松社交，乐于活跃气氛", score:["lando"]},
-            {text:"E.持续学习拓展阅历，平衡运动与自我成长", score:["george","hamilton","perez","ocon","hulkenberg","sargeant"]}
-        ]
-    },
-    {
-        q: "Q15 如果社交媒体大量网友对你发表负面评价，你会？",
-        opts: [
-            {text:"A.直接无视，专注目标，不被外界情绪裹挟", score:["max","gasly","tsunoda","kevin","alpine"]},
-            {text:"B.情绪容易受触动，需要一段时间消化，情感感知力强", score:["charles"]},
-            {text:"C.理性筛选信息，吸收有用建议，其余冷静放下", score:["carlos","zhou","piastri","bottas","stroll"]},
-            {text:"D.幽默玩梗化解，轻松面对舆论，擅长调节氛围", score:["lando"]},
-            {text:"E.从容克制，谨慎表达，照顾公众观感与大局", score:["alonso","hamilton","george","perez","ocon","hulkenberg","sargeant","albon"]}
-        ]
+      }
     }
-];
+  </script>
+  <style>
+    * {
+      -webkit-tap-highlight-color: transparent;
+    }
+    .option-card:active {
+      transform: scale(0.97);
+    }
+  </style>
+</head>
+<body class="bg-f1dark text-f1light min-h-screen">
+  <div class="max-w-xl mx-auto px-4 py-8">
+    <!-- 开始页 -->
+    <div id="start-page" class="block">
+      <div class="text-center">
+        <h1 class="text-[clamp(2rem,8vw,3rem)] font-bold text-f1red mb-4">F1车手性格测试</h1>
+        <p class="text-lg opacity-80 mb-8">一共15道题，选择最贴合你的选项，看看你最像哪位F1车手</p>
+        <button onclick="startTest()" class="bg-f1red hover:bg-red-700 px-8 py-4 rounded-lg text-xl font-semibold transition">
+          开始测试
+        </button>
+      </div>
+    </div>
 
-const resultMap = {
-    max: {name:"马克斯·维斯塔潘 Max Verstappen",tag:"🏆 冷酷王者",desc:"匹配关键词：极致专注、胜负欲极强、拒绝内耗。目标感拉满，不爱废话，讨厌无效社交。一旦认准目标会拼尽全力，别人觉得你强势，你只是追求结果。赛道风格敢拼敢抢，抓住机会绝不手软。"},
-    charles: {name:"夏尔·勒克莱尔 Charles Leclerc",tag:"❤️ 感性天才",desc:"匹配关键词：热烈敏感，情绪真诚，天赋型选手。压力越大越容易爆发，赢了狂喜、输了会难过。对热爱的事物极度执着，内心浪漫，愿意为热爱赌一把。"},
-    lando: {name:"兰多·诺里斯 Lando Norris",tag:"🧡 围场快乐小狗",desc:"匹配关键词：松弛幽默，高情商。看着爱玩，其实实力很强。擅长调节氛围，心态弹性很强，输得起，能在高压环境里找到乐趣，人缘很好。"},
-    carlos: {name:"卡洛斯·塞恩斯 Carlos Sainz",tag:"🤍 Smooth Operator",desc:"匹配关键词：成熟稳健，懂得隐忍，大局观强。懂得审时度势，擅长等待时机，外表温和，骨子里好胜，是靠谱的实力派。"},
-    george: {name:"乔治·拉塞尔 George Russell",tag:"💙 规则策略大师",desc:"匹配关键词：细心严谨，擅长规划，擅长读规则。做事面面俱到，擅长长远布局，外表得体，暗藏野心，擅长抓住每一个细微机会。"},
-    zhou: {name:"周冠宇 Zhou Guanyu",tag:"💚 沉稳韧性型",desc:"匹配关键词：低调坚韧，厚积薄发。一路慢慢打磨自己，抗压能力强，不急不躁，默默积攒实力，稳中求进。"},
-    perez: {name:"塞尔吉奥·佩雷兹 Sergio Pérez",tag:"🤎 可靠团队支柱",desc:"匹配关键词：经验丰富，大局为重，擅长防守。愿意为团队总冠军牺牲个人成绩，冷静稳重，擅长保护轮胎，关键时刻稳定拿分，车队最信赖的二号车手。"},
-    hamilton: {name:"刘易斯·汉密尔顿 Lewis Hamilton",tag:"🖤 时代传奇",desc:"匹配关键词：格局宏大，持续学习，心怀责任。拥有极强的抗压能力与细腻驾驶，不仅追求赛场胜利，也注重自身影响力，终身学习，不断突破自我。"},
-    alonso: {name:"费尔南多·阿隆索 Fernando Alonso",tag:"🔥 不老战神",desc:"匹配关键词：斗志永存，老而弥坚，阅历深厚。对赛车的热爱从未消减，经验丰富，善于审时度势，无论多大年纪，内心永远保有战斗的火焰。"},
-    ocon: {name:"埃斯特班·奥康 Esteban Ocon",tag:"🤍 坚守原则斗士",desc:"匹配关键词：坚守底线，理性冷静，干净竞技。尊重规则、尊重对手，性格独立，不容易被外界裹挟，遇事沉着，依靠稳定发挥争夺积分。"},
-    gasly: {name:"皮埃尔·加斯利 Pierre Gasly",tag:"💜 逆境突围战士",desc:"匹配关键词：内心坚韧，不服输，爆发力强。经历低谷依旧保持斗志，逆境下能够爆发实力，好胜心藏在骨子里，渴望证明自己的天赋。"},
-    piastri: {name:"奥斯卡·皮亚斯特里 Oscar Piastri",tag:"🤍 冷静黑马新秀",desc:"匹配关键词：聪慧内敛，冷静理性，潜力巨大。头脑清晰，善于学习，情绪稳定，不张扬，稳步成长，在合适的时机一鸣惊人。"},
-    albon: {name:"亚历山大·阿尔本 Alexander Albon",tag:"💛 绝境突围者",desc:"匹配关键词：顽强坚韧，逆境爆发，抗压极强。擅长从后排疯狂追赶，永不放弃，就算赛车实力有限，也能拼尽全力拿到超出预期的成绩。"},
-    bottas: {name:"瓦尔特利·博塔斯 Valtteri Bottas",tag:"🩶 隐忍等待者",desc:"匹配关键词：沉稳隐忍，厚积薄发，情绪稳定。可以默默等待机会，专业冷静，赛场发挥稳定，一旦得到机会，就能够全力释放自己的实力。"},
-    hulkenberg: {name:"尼科·霍肯伯格 Nico Hulkenberg",tag:"🖤 硬核老兵",desc:"匹配关键词：直率强硬，战斗不息，经验老道。风格直接干脆，赛场敢打硬仗，不畏惧对抗，拥有强悍的圈速能力，是围场里可靠的实力派老兵。"},
-    kevin: {name:"凯文·马格努森 Kevin Magnussen",tag:"❤️ 勇猛硬汉",desc:"匹配关键词：直率勇猛，敢打硬仗，不畏惧对抗。性格简单直接，赛场风格凶狠，热爱硬碰硬的攻防，就算赛车不强，也会全力拼到最后一圈。"},
-    sargeant: {name:"洛根·萨金特 Logan Sargeant",tag:"🤍 踏实成长新人",desc:"匹配关键词：踏实努力，稳步积累，慢慢沉淀。正在学习围场生存法则，认真对待每一场练习，一点点积累圈速与比赛经验，持续进步。"},
-    tsunoda: {name:"角田裕毅 Yuki Tsunoda",tag:"🧡 热血少年",desc:"匹配关键词：年轻好胜，情绪外放，天赋亮眼。拥有极强的求胜欲，渴望证明自己，敢和顶尖车手缠斗，内心充满斗志，敢冲敢拼。"},
-    stroll: {name:"兰斯·斯特罗尔 Lance Stroll",tag:"🤎 从容稳健型",desc:"匹配关键词：从容稳重，专注目标，心理素质稳定。擅长耐心等待机会，赛场发挥稳定，能够顶住压力，依靠策略拿到积分。"},
-    alpine: {name:"埃斯特班·阿尔派（阿尔派）",tag:"💜 永不言弃斗士",desc:"匹配关键词：斗志旺盛，敢拼敢冲，战斗属性拉满。永远保持进攻心态，遇到对手敢于对抗，不轻易认输，享受赛道上的激烈缠斗。"}
-};
+    <!-- 题目区域 -->
+    <div id="quiz-page" class="hidden">
+      <div class="mb-6 flex justify-between items-center">
+        <span class="text-f1red font-bold">第 <span id="current-num">1</span>/15 题</span>
+        <button onclick="prevQuestion()" id="prev-btn" class="border border-f1light/40 px-3 py-1 rounded hover:bg-f1gray transition">上一题</button>
+      </div>
+      <h2 id="question-text" class="text-xl font-semibold mb-6"></h2>
+      <div id="option-wrap" class="space-y-3"></div>
+    </div>
 
-let current = 0;
-let scoreBucket = {};
-let historyAnswers = [];
-function startQuiz(){current=0;scoreBucket={};historyAnswers=[];document.getElementById("page-cover").classList.add("page-hidden");document.getElementById("page-quiz").classList.remove("page-hidden");renderQuestion();}
-function renderQuestion(){const q=questions[current];document.getElementById("current-num").innerText=current+1;document.getElementById("question-text").innerText=q.q;const optBox=document.getElementById("options-box");optBox.innerHTML="";q.opts.forEach((opt,idx)=>{const btn=document.createElement("button");btn.className="option-btn";btn.innerText=opt.text;if(historyAnswers[current]&&historyAnswers[current].optIdx===idx){btn.classList.add("selected");}btn.onclick=()=>selectOption(idx,opt.score);optBox.appendChild(btn);})const percent=((current+1)/15)*100;document.getElementById("progress-bar").style.width=percent+"%";document.getElementById("prev-button").style.display=current===0?"none":"block";}
-function selectOption(optIdx,scoreKeys){if(historyAnswers[current]){const oldKeys=historyAnswers[current].score;oldKeys.forEach(k=>{scoreBucket[k]--;if(scoreBucket[k]<=0)delete scoreBucket[k];})}historyAnswers[current]={optIdx,score:scoreKeys};scoreKeys.forEach(k=>scoreBucket[k]=(scoreBucket[k]||0)+1);current++;if(current>=questions.length){showResult();return;}renderQuestion();}
-function prevQuestion(){current--;renderQuestion();}
-function showResult(){document.getElementById("page-quiz").classList.add("page-hidden");document.getElementById("page-result").classList.remove("page-hidden");let maxKey=Object.keys(scoreBucket)[0];for(let k in scoreBucket){if(scoreBucket[k]>scoreBucket[maxKey])maxKey=k;}const res=resultMap[maxKey];document.getElementById("driver-name").innerText=res.name;document.getElementById("driver-tag").innerText=res.tag;document.getElementById("driver-desc").innerText=res.desc;}
-function copyResult(){const res=resultMap[Object.keys(scoreBucket).reduce((a,b)=>scoreBucket[a]>scoreBucket[b]?a:b)];const text=`🏁F1车手性格测试\n匹配车手：${res.name}\n${res.tag}\n${res.desc}\n快来测测你是围场里哪位车手！`;navigator.clipboard.writeText(text).then(()=>alert("✅复制成功！"));}
-function restartQuiz(){document.getElementById("page-result").classList.add("page-hidden");document.getElementById("page-cover").classList.remove("page-hidden");}
-</script>
+    <!-- 结果页 -->
+    <div id="result-page" class="hidden text-center">
+      <h2 class="text-2xl font-bold text-f1red mb-4">你的匹配车手是</h2>
+      <div id="result-name" class="text-[clamp(2rem,8vw,3rem)] font-bold mb-4"></div>
+      <p id="result-desc" class="opacity-90 mb-8 leading-relaxed"></p>
+      <div class="flex gap-3 justify-center flex-wrap">
+        <button onclick="copyResult()" class="bg-f1gray px-5 py-3 rounded-lg hover:opacity-80 transition">复制结果</button>
+        <button onclick="restart()" class="bg-f1red px-5 py-3 rounded-lg hover:bg-red-700 transition">重新测试</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 15题（包含2道场外主题）
+    const questions = [
+      {q:"比赛临近，你更偏向？",o:["反复推演所有预案，稳扎稳打","相信自己直觉，临场发挥","会主动和团队沟通调整策略","压力大但会默默扛住","享受紧张刺激的氛围"]},
+      {q:"赛道上被对手紧贴防守，你会？",o:["保持线路，等待对手失误","寻找机会果断超车","先保守防守，再伺机反击","容易被干扰，节奏打乱","用节奏变化打乱对方"]},
+      {q:"车队给的指令和你的判断冲突，你？",o:["优先服从车队安排","坚持自己的判断并沟通","折中，两边都兼顾一点","会有点纠结犹豫","快速试一下再决定"]},
+      {q:"排位赛最后一圈，你？",o:["求稳，保证有效圈","全力push，极限冲刺","先观察对手成绩再定","容易紧张放不开","慢慢找节奏不急躁"]},
+      {q:"赛车出现小故障，你第一反应？",o:["冷静判断能不能继续跑","尝试补救，尽力挽救","立刻通知车队反馈情况","心里容易慌","先跑完当前圈再说"]},
+      {q:"拿到胜利之后，你会？",o:["低调庆祝，回归专注","尽情释放情绪庆祝","感谢团队所有人","安静独处消化喜悦","和好友一起分享快乐"]},
+      {q:"连续几场成绩不理想，你？",o:["埋头复盘找问题，长期调整","越挫越勇，下一场拼命","怀疑自己，情绪低落","换思路，尝试新方式","看淡结果，享受过程"]},
+      {q:"和队友竞争，你更希望？",o:["良性比拼，互相促进","全力压倒对方","保持距离，互不干扰","不想和队友内卷","看车队安排为主"]},
+      {q:"空闲休息日，你更喜欢？",o:["独处休息，恢复精力","约朋友出去玩热闹一下","安排运动健身保持状态","研究爱好或者专业内容","短途旅行放松自己"]},
+      {q:"面对媒体采访，你的风格？",o:["简洁克制，不多说多余的","风趣健谈，很会聊","真诚直白，想到啥说啥","有点腼腆不爱多说","话术得体，面面俱到"]},
+      {q:"如果可以自由安排假期，你优先？",o:["远离人群安静度假","去热闹的地方体验新鲜事物","挑战刺激的户外活动","钻研自己感兴趣的东西","陪伴家人"]},
+      {q:"做计划的时候，你习惯？",o:["详细规划好每一步","定大方向，随机应变","简单计划，灵活调整","不爱做计划，走一步看一步","计划好，但允许改动"]},
+      {q:"朋友遇到麻烦来找你，你？",o:["理性帮他分析解决方案","共情安慰，先照顾情绪","直接出手帮忙行动起来","会担心，但不知道怎么帮","鼓励对方自己克服"]},
+      {q:"【场外】社交场合里，你通常？",o:["安静旁观，少主动搭话","主动活跃气氛，喜欢聊天","只和熟悉的人交谈","礼貌应付，早点离场","看场合状态可i可e"]},
+      {q:"【场外】长期目标，你更看重？",o:["持续稳定，长期拿到好成绩","站上巅峰，留下传奇印记","享受热爱本身，不留遗憾","获得大家认可和尊重","平衡事业和生活"]}
+    ];
+
+    // 20位车手库
+    const drivers = [
+      {name:"维斯塔潘",desc:"强大好胜，内心专注冷静，极致追求胜利，情绪稳定，擅长在压力下把控节奏。"},
+      {name:"勒克莱尔",desc:"天赋出众，敢拼敢冲，拥有细腻的车感，同时心思敏感，对自己要求极高。"},
+      {name:"佩雷兹",desc:"经验老道，擅长防守，情商很高，懂得配合团队，稳健且擅长管理比赛节奏。"},
+      {name:"汉密尔顿",desc:"成熟睿智，目标长远，善于表达，意志坚韧，重视团队，拥有强大精神内核。"},
+      {name:"拉塞尔",desc:"自律严谨，条理清晰，冷静理性，做事稳重，擅长提前规划每一步。"},
+      {name:"诺里斯",desc:"活泼风趣，反应灵动，心态轻松，擅长快速适应变化，赛场内外都很讨喜。"},
+      {name:"皮亚斯特里",desc:"内敛踏实，稳步成长，观察力强，低调专注，厚积薄发的类型。"},
+      {name:"阿隆索",desc:"斗志长青，老谋深算，经验丰富，坚韧不服输，擅长在逆境寻找机会。"},
+      {name:"奥康",desc:"理性克制，注重策略，心思缜密，不容易被外界情绪带动。"},
+      {name:"加斯利",desc:"情绪热烈，爆发力强，敢冒险，重情义，状态好的时候上限极高。"},
+      {name:"塞恩斯",desc:"松弛从容，热爱生活，技术均衡，懂得平衡竞争和享受赛道。"},
+      {name:"里卡多",desc:"外向热情，自带感染力，乐观开朗，擅长调节氛围。"},
+      {name:"霍肯伯格",desc:"稳健务实，心态平稳，不冒进，是可靠的赛场老兵。"},
+      {name:"阿尔本",desc:"温柔坚韧，抗压能力强，懂得在局限条件下做到最好。"},
+      {name:"斯特罗尔",desc:"果决直接，敢拼，有冲劲，专注自己的节奏，不太在意外界声音。"},
+      {name:"博塔斯",desc:"沉稳可靠，执行力强，配合度高，情绪平稳不容易波动。"},
+      {name:"马格努森",desc:"强硬直接，防守凶悍，风格硬核，比赛态度十分坚决。"},
+      {name:"周冠宇",desc:"谦逊沉稳，冷静自律，心思细腻，稳步沉淀，不急不躁。"},
+      {name:"萨金特",desc:"年轻勇敢，愿意学习，心态开放，慢慢积累属于自己的节奏。"},
+      {name:"德弗里斯",desc:"适应力强，思维灵活，善于快速理解车队给到的信息。"},
+    ]
+
+    let current = 0;
+    let answers = [];
+
+    const startPage = document.getElementById("start-page");
+    const quizPage = document.getElementById("quiz-page");
+    const resultPage = document.getElementById("result-page");
+    const qText = document.getElementById("question-text");
+    const optionWrap = document.getElementById("option-wrap");
+    const currentNum = document.getElementById("current-num");
+    const prevBtn = document.getElementById("prev-btn");
+    const resName = document.getElementById("result-name");
+    const resDesc = document.getElementById("result-desc");
+
+    function startTest(){
+      startPage.classList.add("hidden");
+      quizPage.classList.remove("hidden");
+      loadQuestion();
+    }
+    function loadQuestion(){
+      const item = questions[current];
+      qText.innerText = item.q;
+      currentNum.innerText = current+1;
+      optionWrap.innerHTML = "";
+      item.o.forEach((opt,idx)=>{
+        const div = document.createElement("div");
+        div.className = "option-card bg-f1gray p-4 rounded-lg cursor-pointer hover:bg-f1gray/80 transition";
+        div.innerText = opt;
+        div.onclick = ()=>select(idx);
+        optionWrap.appendChild(div);
+      })
+      prevBtn.style.visibility = current === 0 ? "hidden" : "visible";
+    }
+    function select(idx){
+      answers[current] = idx;
+      if(current < questions.length - 1){
+        current++;
+        loadQuestion();
+      }else{
+        showResult();
+      }
+    }
+    function prevQuestion(){
+      if(current > 0){
+        current--;
+        loadQuestion();
+      }
+    }
+    function showResult(){
+      quizPage.classList.add("hidden");
+      resultPage.classList.remove("hidden");
+      //简单随机匹配（你后面想改成计分权重也可以改这里）
+      const seed = answers.reduce((a,b)=>a+b,0);
+      const pickIdx = seed % drivers.length;
+      const driver = drivers[pickIdx];
+      resName.innerText = driver.name;
+      resDesc.innerText = driver.desc;
+    }
+    function copyResult(){
+      const txt = `我的F1车手测试结果：${resName.innerText}\n${resDesc.innerText}`;
+      navigator.clipboard.writeText(txt).then(()=>alert("已复制！"));
+    }
+    function restart(){
+      current=0;
+      answers=[];
+      resultPage.classList.add("hidden");
+      startPage.classList.remove("block");
+      startPage.classList.remove("hidden");
+    }
+  </script>
 </body>
 </html>

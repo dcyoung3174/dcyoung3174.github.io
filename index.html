@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>F1车手性格测试</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 换成国内稳定镜像 -->
+  <script src="https://cdn.bootcdn.net/ajax/libs/tailwindcss/3.4.1/tailwind.min.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -64,117 +65,119 @@
   </div>
 
   <script>
-    // 15题（包含2道场外主题）
-    const questions = [
-      {q:"比赛临近，你更偏向？",o:["反复推演所有预案，稳扎稳打","相信自己直觉，临场发挥","会主动和团队沟通调整策略","压力大但会默默扛住","享受紧张刺激的氛围"]},
-      {q:"赛道上被对手紧贴防守，你会？",o:["保持线路，等待对手失误","寻找机会果断超车","先保守防守，再伺机反击","容易被干扰，节奏打乱","用节奏变化打乱对方"]},
-      {q:"车队给的指令和你的判断冲突，你？",o:["优先服从车队安排","坚持自己的判断并沟通","折中，两边都兼顾一点","会有点纠结犹豫","快速试一下再决定"]},
-      {q:"排位赛最后一圈，你？",o:["求稳，保证有效圈","全力push，极限冲刺","先观察对手成绩再定","容易紧张放不开","慢慢找节奏不急躁"]},
-      {q:"赛车出现小故障，你第一反应？",o:["冷静判断能不能继续跑","尝试补救，尽力挽救","立刻通知车队反馈情况","心里容易慌","先跑完当前圈再说"]},
-      {q:"拿到胜利之后，你会？",o:["低调庆祝，回归专注","尽情释放情绪庆祝","感谢团队所有人","安静独处消化喜悦","和好友一起分享快乐"]},
-      {q:"连续几场成绩不理想，你？",o:["埋头复盘找问题，长期调整","越挫越勇，下一场拼命","怀疑自己，情绪低落","换思路，尝试新方式","看淡结果，享受过程"]},
-      {q:"和队友竞争，你更希望？",o:["良性比拼，互相促进","全力压倒对方","保持距离，互不干扰","不想和队友内卷","看车队安排为主"]},
-      {q:"空闲休息日，你更喜欢？",o:["独处休息，恢复精力","约朋友出去玩热闹一下","安排运动健身保持状态","研究爱好或者专业内容","短途旅行放松自己"]},
-      {q:"面对媒体采访，你的风格？",o:["简洁克制，不多说多余的","风趣健谈，很会聊","真诚直白，想到啥说啥","有点腼腆不爱多说","话术得体，面面俱到"]},
-      {q:"如果可以自由安排假期，你优先？",o:["远离人群安静度假","去热闹的地方体验新鲜事物","挑战刺激的户外活动","钻研自己感兴趣的东西","陪伴家人"]},
-      {q:"做计划的时候，你习惯？",o:["详细规划好每一步","定大方向，随机应变","简单计划，灵活调整","不爱做计划，走一步看一步","计划好，但允许改动"]},
-      {q:"朋友遇到麻烦来找你，你？",o:["理性帮他分析解决方案","共情安慰，先照顾情绪","直接出手帮忙行动起来","会担心，但不知道怎么帮","鼓励对方自己克服"]},
-      {q:"【场外】社交场合里，你通常？",o:["安静旁观，少主动搭话","主动活跃气氛，喜欢聊天","只和熟悉的人交谈","礼貌应付，早点离场","看场合状态可i可e"]},
-      {q:"【场外】长期目标，你更看重？",o:["持续稳定，长期拿到好成绩","站上巅峰，留下传奇印记","享受热爱本身，不留遗憾","获得大家认可和尊重","平衡事业和生活"]}
-    ];
+    // 等待页面DOM加载完成再执行
+    document.addEventListener('DOMContentLoaded', function(){
+      // 15题（包含2道场外主题）
+      const questions = [
+        {q:"比赛临近，你更偏向？",o:["反复推演所有预案，稳扎稳打","相信自己直觉，临场发挥","会主动和团队沟通调整策略","压力大但会默默扛住","享受紧张刺激的氛围"]},
+        {q:"赛道上被对手紧贴防守，你会？",o:["保持线路，等待对手失误","寻找机会果断超车","先保守防守，再伺机反击","容易被干扰，节奏打乱","用节奏变化打乱对方"]},
+        {q:"车队给的指令和你的判断冲突，你？",o:["优先服从车队安排","坚持自己的判断并沟通","折中，两边都兼顾一点","会有点纠结犹豫","快速试一下再决定"]},
+        {q:"排位赛最后一圈，你？",o:["求稳，保证有效圈","全力push，极限冲刺","先观察对手成绩再定","容易紧张放不开","慢慢找节奏不急躁"]},
+        {q:"赛车出现小故障，你第一反应？",o:["冷静判断能不能继续跑","尝试补救，尽力挽救","立刻通知车队反馈情况","心里容易慌","先跑完当前圈再说"]},
+        {q:"拿到胜利之后，你会？",o:["低调庆祝，回归专注","尽情释放情绪庆祝","感谢团队所有人","安静独处消化喜悦","和好友一起分享快乐"]},
+        {q:"连续几场成绩不理想，你？",o:["埋头复盘找问题，长期调整","越挫越勇，下一场拼命","怀疑自己，情绪低落","换思路，尝试新方式","看淡结果，享受过程"]},
+        {q:"和队友竞争，你更希望？",o:["良性比拼，互相促进","全力压倒对方","保持距离，互不干扰","不想和队友内卷","看车队安排为主"]},
+        {q:"空闲休息日，你更喜欢？",o:["独处休息，恢复精力","约朋友出去玩热闹一下","安排运动健身保持状态","研究爱好或者专业内容","短途旅行放松自己"]},
+        {q:"面对媒体采访，你的风格？",o:["简洁克制，不多说多余的","风趣健谈，很会聊","真诚直白，想到啥说啥","有点腼腆不爱多说","话术得体，面面俱到"]},
+        {q:"如果可以自由安排假期，你优先？",o:["远离人群安静度假","去热闹的地方体验新鲜事物","挑战刺激的户外活动","钻研自己感兴趣的东西","陪伴家人"]},
+        {q:"做计划的时候，你习惯？",o:["详细规划好每一步","定大方向，随机应变","简单计划，灵活调整","不爱做计划，走一步看一步","计划好，但允许改动"]},
+        {q:"朋友遇到麻烦来找你，你？",o:["理性帮他分析解决方案","共情安慰，先照顾情绪","直接出手帮忙行动起来","会担心，但不知道怎么帮","鼓励对方自己克服"]},
+        {q:"【场外】社交场合里，你通常？",o:["安静旁观，少主动搭话","主动活跃气氛，喜欢聊天","只和熟悉的人交谈","礼貌应付，早点离场","看场合状态可i可e"]},
+        {q:"【场外】长期目标，你更看重？",o:["持续稳定，长期拿到好成绩","站上巅峰，留下传奇印记","享受热爱本身，不留遗憾","获得大家认可和尊重","平衡事业和生活"]}
+      ];
 
-    // 20位车手库
-    const drivers = [
-      {name:"维斯塔潘",desc:"强大好胜，内心专注冷静，极致追求胜利，情绪稳定，擅长在压力下把控节奏。"},
-      {name:"勒克莱尔",desc:"天赋出众，敢拼敢冲，拥有细腻的车感，同时心思敏感，对自己要求极高。"},
-      {name:"佩雷兹",desc:"经验老道，擅长防守，情商很高，懂得配合团队，稳健且擅长管理比赛节奏。"},
-      {name:"汉密尔顿",desc:"成熟睿智，目标长远，善于表达，意志坚韧，重视团队，拥有强大精神内核。"},
-      {name:"拉塞尔",desc:"自律严谨，条理清晰，冷静理性，做事稳重，擅长提前规划每一步。"},
-      {name:"诺里斯",desc:"活泼风趣，反应灵动，心态轻松，擅长快速适应变化，赛场内外都很讨喜。"},
-      {name:"皮亚斯特里",desc:"内敛踏实，稳步成长，观察力强，低调专注，厚积薄发的类型。"},
-      {name:"阿隆索",desc:"斗志长青，老谋深算，经验丰富，坚韧不服输，擅长在逆境寻找机会。"},
-      {name:"奥康",desc:"理性克制，注重策略，心思缜密，不容易被外界情绪带动。"},
-      {name:"加斯利",desc:"情绪热烈，爆发力强，敢冒险，重情义，状态好的时候上限极高。"},
-      {name:"塞恩斯",desc:"松弛从容，热爱生活，技术均衡，懂得平衡竞争和享受赛道。"},
-      {name:"里卡多",desc:"外向热情，自带感染力，乐观开朗，擅长调节氛围。"},
-      {name:"霍肯伯格",desc:"稳健务实，心态平稳，不冒进，是可靠的赛场老兵。"},
-      {name:"阿尔本",desc:"温柔坚韧，抗压能力强，懂得在局限条件下做到最好。"},
-      {name:"斯特罗尔",desc:"果决直接，敢拼，有冲劲，专注自己的节奏，不太在意外界声音。"},
-      {name:"博塔斯",desc:"沉稳可靠，执行力强，配合度高，情绪平稳不容易波动。"},
-      {name:"马格努森",desc:"强硬直接，防守凶悍，风格硬核，比赛态度十分坚决。"},
-      {name:"周冠宇",desc:"谦逊沉稳，冷静自律，心思细腻，稳步沉淀，不急不躁。"},
-      {name:"萨金特",desc:"年轻勇敢，愿意学习，心态开放，慢慢积累属于自己的节奏。"},
-      {name:"德弗里斯",desc:"适应力强，思维灵活，善于快速理解车队给到的信息。"},
-    ]
+      // 20位车手库
+      const drivers = [
+        {name:"维斯塔潘",desc:"强大好胜，内心专注冷静，极致追求胜利，情绪稳定，擅长在压力下把控节奏。"},
+        {name:"勒克莱尔",desc:"天赋出众，敢拼敢冲，拥有细腻的车感，同时心思敏感，对自己要求极高。"},
+        {name:"佩雷兹",desc:"经验老道，擅长防守，情商很高，懂得配合团队，稳健且擅长管理比赛节奏。"},
+        {name:"汉密尔顿",desc:"成熟睿智，目标长远，善于表达，意志坚韧，重视团队，拥有强大精神内核。"},
+        {name:"拉塞尔",desc:"自律严谨，条理清晰，冷静理性，做事稳重，擅长提前规划每一步。"},
+        {name:"诺里斯",desc:"活泼风趣，反应灵动，心态轻松，擅长快速适应变化，赛场内外都很讨喜。"},
+        {name:"皮亚斯特里",desc:"内敛踏实，稳步成长，观察力强，低调专注，厚积薄发的类型。"},
+        {name:"阿隆索",desc:"斗志长青，老谋深算，经验丰富，坚韧不服输，擅长在逆境寻找机会。"},
+        {name:"奥康",desc:"理性克制，注重策略，心思缜密，不容易被外界情绪带动。"},
+        {name:"加斯利",desc:"情绪热烈，爆发力强，敢冒险，重情义，状态好的时候上限极高。"},
+        {name:"塞恩斯",desc:"松弛从容，热爱生活，技术均衡，懂得平衡竞争和享受赛道。"},
+        {name:"里卡多",desc:"外向热情，自带感染力，乐观开朗，擅长调节氛围。"},
+        {name:"霍肯伯格",desc:"稳健务实，心态平稳，不冒进，是可靠的赛场老兵。"},
+        {name:"阿尔本",desc:"温柔坚韧，抗压能力强，懂得在局限条件下做到最好。"},
+        {name:"斯特罗尔",desc:"果决直接，敢拼，有冲劲，专注自己的节奏，不太在意外界声音。"},
+        {name:"博塔斯",desc:"沉稳可靠，执行力强，配合度高，情绪平稳不容易波动。"},
+        {name:"马格努森",desc:"强硬直接，防守凶悍，风格硬核，比赛态度十分坚决。"},
+        {name:"周冠宇",desc:"谦逊沉稳，冷静自律，心思细腻，稳步沉淀，不急不躁。"},
+        {name:"萨金特",desc:"年轻勇敢，愿意学习，心态开放，慢慢积累属于自己的节奏。"},
+        {name:"德弗里斯",desc:"适应力强，思维灵活，善于快速理解车队给到的信息。"},
+      ]
 
-    let current = 0;
-    let answers = [];
+      let current = 0;
+      let answers = [];
 
-    const startPage = document.getElementById("start-page");
-    const quizPage = document.getElementById("quiz-page");
-    const resultPage = document.getElementById("result-page");
-    const qText = document.getElementById("question-text");
-    const optionWrap = document.getElementById("option-wrap");
-    const currentNum = document.getElementById("current-num");
-    const prevBtn = document.getElementById("prev-btn");
-    const resName = document.getElementById("result-name");
-    const resDesc = document.getElementById("result-desc");
+      const startPage = document.getElementById("start-page");
+      const quizPage = document.getElementById("quiz-page");
+      const resultPage = document.getElementById("result-page");
+      const qText = document.getElementById("question-text");
+      const optionWrap = document.getElementById("option-wrap");
+      const currentNum = document.getElementById("current-num");
+      const prevBtn = document.getElementById("prev-btn");
+      const resName = document.getElementById("result-name");
+      const resDesc = document.getElementById("result-desc");
 
-    function startTest(){
-      startPage.classList.add("hidden");
-      quizPage.classList.remove("hidden");
-      loadQuestion();
-    }
-    function loadQuestion(){
-      const item = questions[current];
-      qText.innerText = item.q;
-      currentNum.innerText = current+1;
-      optionWrap.innerHTML = "";
-      item.o.forEach((opt,idx)=>{
-        const div = document.createElement("div");
-        div.className = "option-card bg-f1gray p-4 rounded-lg cursor-pointer hover:bg-f1gray/80 transition";
-        div.innerText = opt;
-        div.onclick = ()=>select(idx);
-        optionWrap.appendChild(div);
-      })
-      prevBtn.style.visibility = current === 0 ? "hidden" : "visible";
-    }
-    function select(idx){
-      answers[current] = idx;
-      if(current < questions.length - 1){
-        current++;
-        loadQuestion();
-      }else{
-        showResult();
-      }
-    }
-    function prevQuestion(){
-      if(current > 0){
-        current--;
+      window.startTest = function(){
+        startPage.classList.add("hidden");
+        quizPage.classList.remove("hidden");
         loadQuestion();
       }
-    }
-    function showResult(){
-      quizPage.classList.add("hidden");
-      resultPage.classList.remove("hidden");
-      //简单随机匹配（你后面想改成计分权重也可以改这里）
-      const seed = answers.reduce((a,b)=>a+b,0);
-      const pickIdx = seed % drivers.length;
-      const driver = drivers[pickIdx];
-      resName.innerText = driver.name;
-      resDesc.innerText = driver.desc;
-    }
-    function copyResult(){
-      const txt = `我的F1车手测试结果：${resName.innerText}\n${resDesc.innerText}`;
-      navigator.clipboard.writeText(txt).then(()=>alert("已复制！"));
-    }
-    function restart(){
-      current=0;
-      answers=[];
-      resultPage.classList.add("hidden");
-      startPage.classList.remove("block");
-      startPage.classList.remove("hidden");
-    }
+      function loadQuestion(){
+        const item = questions[current];
+        qText.innerText = item.q;
+        currentNum.innerText = current+1;
+        optionWrap.innerHTML = "";
+        item.o.forEach((opt,idx)=>{
+          const div = document.createElement("div");
+          div.className = "option-card bg-f1gray p-4 rounded-lg cursor-pointer hover:bg-f1gray/80 transition";
+          div.innerText = opt;
+          div.onclick = ()=>select(idx);
+          optionWrap.appendChild(div);
+        })
+        prevBtn.style.visibility = current === 0 ? "hidden" : "visible";
+      }
+      function select(idx){
+        answers[current] = idx;
+        if(current < questions.length - 1){
+          current++;
+          loadQuestion();
+        }else{
+          showResult();
+        }
+      }
+      window.prevQuestion = function(){
+        if(current > 0){
+          current--;
+          loadQuestion();
+        }
+      }
+      function showResult(){
+        quizPage.classList.add("hidden");
+        resultPage.classList.remove("hidden");
+        //简单随机匹配
+        const seed = answers.reduce((a,b)=>a+b,0);
+        const pickIdx = seed % drivers.length;
+        const driver = drivers[pickIdx];
+        resName.innerText = driver.name;
+        resDesc.innerText = driver.desc;
+      }
+      window.copyResult = function(){
+        const txt = `我的F1车手测试结果：${resName.innerText}\n${resDesc.innerText}`;
+        navigator.clipboard.writeText(txt).then(()=>alert("已复制！"));
+      }
+      window.restart = function(){
+        current=0;
+        answers=[];
+        resultPage.classList.add("hidden");
+        startPage.classList.remove("hidden");
+      }
+    })
   </script>
 </body>
 </html>
